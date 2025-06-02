@@ -1,10 +1,16 @@
 // src/app/launch-tracker/page.tsx
-
-import type { Metadata } from 'next';
 import { Launch, IssData } from '@/types/launch';
-import moment from 'moment';
+import Image from 'next/image';
 
 // --- Types ---
+interface IssApiResponse {
+  message: string;
+  timestamp: number;
+  iss_position: {
+    latitude: number;
+    longitude: number;
+  };
+}
 
 interface LaunchApiResponse {
   results: Launch[];
@@ -128,9 +134,12 @@ export default async function LaunchTrackerPage() {
                 className="bg-gray-700/60 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center shadow-md border border-gray-600"
               >
                 {launch.image && (
-                  <img
+                  <Image // ✅ Replaced <img> with <Image />
                     src={launch.image}
                     alt={launch.name || "Rocket Launch"}
+                    width={128} // 128px width for MD screens
+                    height={96} // 96px height
+                    unoptimized // ✅ For external images not in next.config.js domains
                     className="w-full md:w-32 h-auto md:h-24 object-cover rounded-md mr-0 md:mr-4 mb-4 md:mb-0 border border-gray-500"
                   />
                 )}
