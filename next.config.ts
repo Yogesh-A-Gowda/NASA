@@ -36,13 +36,7 @@ const nextConfig: NextConfig = {
       },
           // Add other NASA image domains as you integrate more APIs
     ],
-    domains: [
-      // Add 'images-assets.nasa.gov' here
-      'images-assets.nasa.gov',
-      // If you had other domains for next/image (e.g., for APOD)
-      // 'apod.nasa.gov',
-      // 'himawari8.nict.go.jp' // for Earth From Space, if using next/image there
-    ],  
+  domains: ['apod.nasa.gov', 'picsum.photos'],
   },
 };
 

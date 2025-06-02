@@ -82,7 +82,7 @@ export default async function SpaceWeatherPage() {
             <p className="font-semibold">Error fetching Solar Flares:</p>
             <p className="mt-2">{flrError}</p>
             <p className="mt-2 text-sm text-gray-200">
-              Check your API key and network connection. NASA's API might also have rate limits.
+              Check your API key and network connection. NASAs API might also have rate limits.
             </p>
           </div>
         ) : !flrs || flrs.length === 0 ? (
@@ -130,7 +130,7 @@ export default async function SpaceWeatherPage() {
             <p className="font-semibold">Error fetching CMEs:</p>
             <p className="mt-2">{cmeError}</p>
             <p className="mt-2 text-sm text-gray-200">
-              Check your API key and network connection. NASA's API might also have rate limits.
+              Check your API key and network connection. NASAs API might also have rate limits.
             </p>
           </div>
         ) : !cmes || cmes.length === 0 ? (
@@ -182,7 +182,7 @@ export default async function SpaceWeatherPage() {
             <p className="font-semibold">Error fetching Geomagnetic Storms:</p>
             <p className="mt-2">{gstError}</p>
             <p className="mt-2 text-sm text-gray-200">
-              Check your API key and network connection. NASA's API might also have rate limits.
+              Check your API key and network connection. NASAs API might also have rate limits.
             </p>
           </div>
         ) : !gsts || gsts.length === 0 ? (

@@ -54,7 +54,7 @@ export default async function MarsRoverGalleryPage() {
   return (
     <>
       <h1 className="text-4xl font-bold mb-6 text-blue-300">Mars Rover Gallery</h1>
-      <p className="text-lg text-gray-300 mb-8">Browse images from the Red Planet captured by NASA's rovers.</p>
+      <p className="text-lg text-gray-300 mb-8">Browse images from the Red Planet captured by NASAs rovers.</p>
 
       {error ? (
         <div className="bg-red-700 p-4 rounded-lg text-white text-center max-w-3xl mx-auto shadow-lg">

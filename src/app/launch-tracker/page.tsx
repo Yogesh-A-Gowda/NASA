@@ -1,7 +1,7 @@
 // src/app/launch-tracker/page.tsx
 import type { Metadata } from 'next';
 import { Launch, IssData } from '@/types/launch';
-import Image from 'next/image'; // ✅ Added Next.js Image component
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Launches & ISS - NASA Data Hub',

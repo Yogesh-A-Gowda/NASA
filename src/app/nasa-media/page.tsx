@@ -1,14 +1,7 @@
 // src/app/nasa-media/page.tsx
 
-'use client'; // This component uses client-side hooks like useState and useEffect
+'use client'; 
 
-import type { Metadata } from 'next'; // Metadata is a server-side export, won't work in client components directly
-// To set metadata in a client component, you'd typically use a layout or a custom hook
-// For now, we'll keep it as a comment since the page itself is a client component.
-// export const metadata: Metadata = {
-//   title: 'NASA Media Library - NASA Data Hub',
-//   description: 'Search for images and videos from NASA.',
-// };
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'; // For reading URL query parameters
