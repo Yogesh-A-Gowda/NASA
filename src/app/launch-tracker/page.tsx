@@ -1,48 +1,12 @@
 // src/app/launch-tracker/page.tsx
-
 import type { Metadata } from 'next';
 import { Launch, IssData } from '@/types/launch';
+import Image from 'next/image'; // ✅ Added Next.js Image component
 
 export const metadata: Metadata = {
   title: 'Launches & ISS - NASA Data Hub',
   description: 'Track upcoming rocket launches and the International Space Station.',
 };
-
-// // --- Types (You should move these to a shared types file later) ---
-// interface LaunchApiResponse {
-//   results: Launch[];
-// }
-
-// interface Launch {
-//   id: string;
-//   name?: string;
-//   image?: string;
-//   net?: string;
-//   webcast_live?: boolean;
-//   status?: { name?: string };
-//   mission?: { description?: string };
-//   launch_service_provider?: { name?: string };
-//   rocket?: {
-//     configuration?: { full_name?: string };
-//   };
-//   pad?: {
-//     name?: string;
-//     location?: { name?: string };
-//   };
-// }
-
-// interface IssPosition {
-//   latitude: string;
-//   longitude: string;
-// }
-
-// interface IssApiResponse {
-//   message: string;
-//   timestamp: number;
-//   iss_position: IssPosition;
-// }
-
-// // --- Data Fetching Functions ---
 
 async function getUpcomingLaunches(): Promise<{ launches: Launch[] | null; error?: string }> {
   const apiUrl = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=10&mode=list';
@@ -55,11 +19,12 @@ async function getUpcomingLaunches(): Promise<{ launches: Launch[] | null; error
       throw new Error(`Launch API Error: ${response.status} ${response.statusText} - ${errorData.detail || 'Unknown error.'}`);
     }
 
-    const data: LaunchApiResponse = await response.json();
+    const data: { results: Launch[] } = await response.json();
     return { launches: data.results };
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch upcoming launches:', error);
-    return { error: error.message || 'An unexpected error occurred while fetching launch data.', launches: null };
+    return { error: errorMessage, launches: null };
   }
 }
 
@@ -74,7 +39,9 @@ async function getIssLocation(): Promise<{ issData: IssData | null; error?: stri
       throw new Error(`ISS API Error: ${response.status} ${response.statusText} - ${errorText || 'Unknown error.'}`);
     }
 
-    const data: IssApiResponse = await response.json();
+    const data: { message: string; timestamp: number; iss_position: { latitude: string; longitude: string } } =
+      await response.json();
+
     if (data.message !== 'success') {
       throw new Error(`ISS API reported non-success message: ${data.message}`);
     }
@@ -86,13 +53,12 @@ async function getIssLocation(): Promise<{ issData: IssData | null; error?: stri
     };
 
     return { issData };
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch ISS location:', error);
-    return { error: error.message || 'An unexpected error occurred while fetching ISS location.', issData: null };
+    return { error: errorMessage, issData: null };
   }
 }
-
-// --- Page Component ---
 
 export default async function LaunchTrackerPage() {
   const { launches, error: launchesError } = await getUpcomingLaunches();
@@ -156,13 +122,16 @@ export default async function LaunchTrackerPage() {
           <div className="space-y-6">
             {launches.map((launch) => (
               <div
-                key={launch.id}
+                key={launch.id ?? `launch-${Math.random().toString(36).substr(2, 9)}`}
                 className="bg-gray-700/60 p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center shadow-md border border-gray-600"
               >
                 {launch.image && (
-                  <img
+                  <Image
                     src={launch.image}
                     alt={launch.name || "Rocket Launch"}
+                    width={128}
+                    height={96}
+                    unoptimized
                     className="w-full md:w-32 h-auto md:h-24 object-cover rounded-md mr-0 md:mr-4 mb-4 md:mb-0 border border-gray-500"
                   />
                 )}

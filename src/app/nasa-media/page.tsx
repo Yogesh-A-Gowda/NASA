@@ -90,7 +90,7 @@ export default function NasaMediaPage() {
     <div className="min-h-screen p-4 md:p-8 relative z-20">
       <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-center text-purple-300">NASA Media Library</h1>
       <p className="text-lg md:text-xl text-center mb-10 text-gray-300">
-        Explore images and videos from NASA's extensive collection.
+        Explore images and videos from NASAs extensive collection.
       </p>
 
       {/* Search Input */}
