@@ -1,33 +1,23 @@
 // src/app/nasa-media/page.tsx
 
-'use client'; 
-
+'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation'; // For reading URL query parameters
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { NasaMediaSearchResultItem } from '@/types/nasa-media';
 import moment from 'moment';
 
-// Re-declare Metadata for client-side knowledge, not for Next.js build
-// In a real app, define in layout.tsx or use a metadata API if in app router
-const pageMetadata = {
-  title: 'NASA Media Library - NASA Data Hub',
-  description: 'Search for images and videos from NASA.',
-};
-
-
 export default function NasaMediaPage() {
   const searchParams = useSearchParams();
-  const initialSearchQuery = searchParams.get('q') || ''; // Get initial query from URL
+  const initialSearchQuery = searchParams.get('q') || '';
 
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [results, setResults] = useState<NasaMediaSearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false); // To prevent "no results" on initial load
+  const [hasSearched, setHasSearched] = useState(false);
 
-  // Function to fetch data from the NASA Image and Video Library API
   const fetchNasaMedia = async (query: string) => {
     if (!query.trim()) {
       setResults([]);
@@ -38,7 +28,7 @@ export default function NasaMediaPage() {
 
     setLoading(true);
     setError(null);
-    setHasSearched(true); // User has initiated a search
+    setHasSearched(true);
 
     const apiUrl = `https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image,video`;
 
@@ -50,20 +40,22 @@ export default function NasaMediaPage() {
       }
 
       const data = await response.json();
+
       if (data.collection && data.collection.items) {
         setResults(data.collection.items);
       } else {
         setResults([]);
       }
-    } catch (err: any) {
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred while fetching media.';
       console.error('Failed to fetch NASA media:', err);
-      setError(err.message || 'An unexpected error occurred while fetching media.');
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // Effect to perform search when searchQuery changes (e.g., initial load or manual search)
   useEffect(() => {
     fetchNasaMedia(searchQuery);
   }, [searchQuery]);
@@ -74,16 +66,13 @@ export default function NasaMediaPage() {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // The useEffect will trigger the fetch when searchQuery state updates
-    // If you want to push the query to the URL:
-    // router.push(`/nasa-media?q=${encodeURIComponent(searchQuery)}`);
   };
 
   return (
     <div className="min-h-screen p-4 md:p-8 relative z-20">
       <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-center text-purple-300">NASA Media Library</h1>
       <p className="text-lg md:text-xl text-center mb-10 text-gray-300">
-        Explore images and videos from NASAs extensive collection.
+        Explore images and videos from NASA&apos;s extensive collection.
       </p>
 
       {/* Search Input */}
@@ -114,35 +103,37 @@ export default function NasaMediaPage() {
         <div className="bg-red-700/80 p-4 rounded-lg text-white text-center max-w-3xl mx-auto shadow-lg border border-white">
           <p className="font-semibold text-lg">Error fetching media:</p>
           <p className="mt-2">{error}</p>
-          <p className="mt-4 text-sm">Please try again later. The NASA Image and Video Library API might be temporarily unavailable.</p>
+          <p className="mt-4 text-sm">
+            Please try again later. The NASA Image and Video Library API might be temporarily unavailable.
+          </p>
         </div>
       ) : hasSearched && results.length === 0 ? (
         <div className="text-center text-gray-400 text-xl py-10">
-          <p>No results found for "{searchQuery}". Try a different keyword!</p>
+          <p>No results found for &quot;{searchQuery}&quot;. Try a different keyword!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {results.map((item) => {
-            const data = item.data[0]; // Most items have one data entry
-            const thumbnail = item.links?.find(link => link.rel === 'preview')?.href; // Find the preview image
+            const data = item.data[0];
+            const thumbnail = item.links?.find(link => link.rel === 'preview')?.href;
 
-            if (!data) return null; // Skip if no data
-            
+            if (!data) return null;
+
             return (
               <a
                 key={data.nasa_id}
-                href={`https://images.nasa.gov/details/${data.nasa_id}`} // Link to official details page
+                href={`https://images.nasa.gov/details/${data.nasa_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gray-800/70 rounded-lg shadow-lg hover:bg-gray-700/80 transition duration-300 border border-purple-700 flex flex-col overflow-hidden"
               >
                 {thumbnail ? (
-                  <div className="relative w-full" style={{ paddingBottom: '75%' }}> {/* 4:3 aspect ratio */}
+                  <div className="relative w-full" style={{ paddingBottom: '75%' }}>
                     <Image
                       src={thumbnail}
                       alt={data.title}
-                      layout="fill"
-                      objectFit="cover"
+                      fill
+                      style={{ objectFit: 'cover' }}
                       className="rounded-t-lg"
                     />
                   </div>

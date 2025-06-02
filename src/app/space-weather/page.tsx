@@ -22,26 +22,45 @@ function getFormattedDate(date: Date): string {
 const thirtyDaysAgo = getFormattedDate(moment().subtract(30, 'days').toDate());
 const today = getFormattedDate(moment().toDate());
 
-async function fetchDonkiData<T>(endpoint: string, eventName: string): Promise<{ data: T[] | null; error?: string }> {
+async function fetchDonkiData<T>(
+  endpoint: string,
+  eventName: string
+): Promise<{ data: T[] | null; error?: string }> {
   if (!NASA_API_KEY) {
-    return { data: null, error: 'NASA API Key is not configured. Please set NEXT_PUBLIC_NASA_API_KEY in your .env.local file.' };
+    return {
+      data: null,
+      error:
+        'NASA API Key is not configured. Please set NEXT_PUBLIC_NASA_API_KEY in your .env.local file.',
+    };
   }
 
   const apiUrl = `https://api.nasa.gov/DONKI/${endpoint}?startDate=${thirtyDaysAgo}&endDate=${today}&api_key=${NASA_API_KEY}`;
 
   try {
-    const response = await fetch(apiUrl, { next: { revalidate: 3600 } }); // Revalidate every hour
+    const response = await fetch(apiUrl, { next: { revalidate: 3600 } });
 
     if (!response.ok) {
       const errorText = await response.text(); // Get raw text for errors
-      throw new Error(`DONKI ${eventName} API Error: ${response.status} ${response.statusText} - ${errorText || 'Unknown error.'}`);
+      throw new Error(
+        `${eventName} API Error: ${response.status} ${response.statusText} - ${
+          errorText || 'Unknown error.'
+        }`
+      );
     }
 
     const data: T[] = await response.json();
     return { data };
-  } catch (error: any) {
+  } catch (error) {
+    let errorMessage = `An unexpected error occurred while fetching ${eventName}.`;
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+
     console.error(`Failed to fetch ${eventName}:`, error);
-    return { error: error.message || `An unexpected error occurred while fetching ${eventName}.`, data: null };
+    return { data: null, error: errorMessage };
   }
 }
 

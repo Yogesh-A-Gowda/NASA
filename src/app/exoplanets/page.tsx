@@ -1,5 +1,3 @@
-// src/app/exoplanets/page.tsx
-
 import type { Metadata } from 'next';
 import { Exoplanet } from '@/types/exoplanet';
 
@@ -28,22 +26,29 @@ async function getExoplanetsData(): Promise<{ exoplanets: Exoplanet[] | null; er
         if (errorText.length > 0) {
           errorMsg += ` - ${errorText.substring(0, 100)}...`;
         }
-      } catch (jsonError) {
-        // If response isn't JSON or parsing fails
+      } catch (err)
+      {
+        console.log(err);
+        // If response isn't JSON or parsing fails — we ignore this unused variable
         errorMsg += ` - (Could not parse error details)`;
       }
       throw new Error(errorMsg);
     }
 
+    // ✅ Replaced `any` with proper type
     const data: Exoplanet[] = await response.json();
 
     // Filter out any planets without name or invalid entries
     const filteredData = data.filter((planet): planet is Exoplanet => Boolean(planet.pl_name));
 
     return { exoplanets: filteredData };
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch exoplanets:', error);
-    return { error: error.message || 'An unexpected error occurred while fetching exoplanet data.', exoplanets: null };
+    return {
+      error: errorMessage,
+      exoplanets: null,
+    };
   }
 }
 
@@ -62,7 +67,9 @@ export default async function ExoplanetsPage() {
         <div className="bg-red-700/80 p-4 rounded-lg text-white text-center max-w-3xl mx-auto shadow-lg border border-white">
           <p className="font-semibold text-lg">Error fetching Exoplanets:</p>
           <p className="mt-2">{error}</p>
-          <p className="mt-4 text-sm">Please try again later. The exoplanet API might be temporarily unavailable or under heavy load.</p>
+          <p className="mt-4 text-sm">
+            Please try again later. The exoplanet API might be temporarily unavailable or under heavy load.
+          </p>
         </div>
       ) : !exoplanets || exoplanets.length === 0 ? (
         <div className="text-center text-gray-400 text-xl py-10">
@@ -97,6 +104,11 @@ export default async function ExoplanetsPage() {
                 {typeof planet.pl_radj === 'number' && (
                   <p className="text-gray-300 text-sm mb-1">
                     <span className="font-medium">Radius:</span> {planet.pl_radj.toFixed(2)} Jupiter radii
+                  </p>
+                )}
+                {typeof planet.pl_dens === 'number' && (
+                  <p className="text-gray-300 text-sm mb-1">
+                    <span className="font-medium">Density:</span> {planet.pl_dens.toFixed(2)} g/cm³
                   </p>
                 )}
                 {typeof planet.st_dist === 'number' && (
