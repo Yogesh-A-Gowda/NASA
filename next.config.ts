@@ -34,7 +34,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-          // Add other NASA image domains as you integrate more APIs
+       {
+        protocol: 'https',
+        hostname: 'images-assets.nasa.gov',
+        port: '',
+        pathname: '/image/**', // Allows all image paths under /image/
+      },
     ],
   domains: ['apod.nasa.gov', 'picsum.photos'],
   },

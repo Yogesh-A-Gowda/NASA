@@ -1,159 +1,160 @@
-// src/app/nasa-media/page.tsx
+// // src/app/nasa-media/page.tsx
 
-'use client';
+// 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Image from 'next/image';
-import { NasaMediaSearchResultItem } from '@/types/nasa-media';
-import moment from 'moment';
+// import { useState, useEffect } from 'react';
+// import { useSearchParams } from 'next/navigation';
+// import Image from 'next/image';
+// import { NasaMediaSearchResultItem } from '@/types/nasa-media';
+// import moment from 'moment';
 
-export default function NasaMediaPage() {
-  const searchParams = useSearchParams();
-  const initialSearchQuery = searchParams.get('q') || '';
+// export default function NasaMediaPage() {
+//   const searchParams = useSearchParams();
+//   const initialSearchQuery = searchParams.get('q') || '';
 
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
-  const [results, setResults] = useState<NasaMediaSearchResultItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
+//   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+//   const [results, setResults] = useState<NasaMediaSearchResultItem[]>([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
+//   const [hasSearched, setHasSearched] = useState(false);
 
-  const fetchNasaMedia = async (query: string) => {
-    if (!query.trim()) {
-      setResults([]);
-      setError(null);
-      setLoading(false);
-      return;
-    }
+//   const fetchNasaMedia = async (query: string) => {
+//     if (!query.trim()) {
+//       setResults([]);
+//       setError(null);
+//       setLoading(false);
+//       return;
+//     }
 
-    setLoading(true);
-    setError(null);
-    setHasSearched(true);
+//     setLoading(true);
+//     setError(null);
+//     setHasSearched(true);
 
-    const apiUrl = `https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image,video`;
+//     const apiUrl = `https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image,video`;
 
-    try {
-      const response = await fetch(apiUrl);
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API Error: ${response.status} ${response.statusText} - ${errorText || 'Unknown error.'}`);
-      }
+//     try {
+//       const response = await fetch(apiUrl);
+//       if (!response.ok) {
+//         const errorText = await response.text();
+//         throw new Error(`API Error: ${response.status} ${response.statusText} - ${errorText || 'Unknown error.'}`);
+//       }
 
-      const data = await response.json();
+//       const data = await response.json();
 
-      if (data.collection && data.collection.items) {
-        setResults(data.collection.items);
-      } else {
-        setResults([]);
-      }
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred while fetching media.';
-      console.error('Failed to fetch NASA media:', err);
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+//       if (data.collection && data.collection.items) {
+//         setResults(data.collection.items);
+//       } else {
+//         setResults([]);
+//       }
+//     } catch (err) {
+//       const errorMessage =
+//         err instanceof Error ? err.message : 'An unexpected error occurred while fetching media.';
+//       console.error('Failed to fetch NASA media:', err);
+//       setError(errorMessage);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  useEffect(() => {
-    fetchNasaMedia(searchQuery);
-  }, [searchQuery]);
+//   useEffect(() => {
+//     fetchNasaMedia(searchQuery);
+//   }, [searchQuery]);
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
+//   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setSearchQuery(e.target.value);
+//   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
+//   const handleSearchSubmit = (e: React.FormEvent) => {
+//     e.preventDefault();
+//   };
 
-  return (
-    <div className="min-h-screen p-4 md:p-8 relative z-20">
-      <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-center text-purple-300">NASA Media Library</h1>
-      <p className="text-lg md:text-xl text-center mb-10 text-gray-300">
-        Explore images and videos from NASA&apos;s extensive collection.
-      </p>
+//   return (
+//     <div className="min-h-screen p-4 md:p-8 relative z-20">
+//       <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-center text-purple-300">NASA Media Library</h1>
+//       <p className="text-lg md:text-xl text-center mb-10 text-gray-300">
+//         Explore images and videos from NASA&apos;s extensive collection.
+//       </p>
 
-      {/* Search Input */}
-      <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto mb-12">
-        <div className="flex bg-gray-800/70 rounded-lg shadow-lg border border-purple-700">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchInputChange}
-            placeholder="Search for Mars, Apollo, Hubble, nebula..."
-            className="flex-grow p-4 bg-transparent text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-l-lg"
-          />
-          <button
-            type="submit"
-            className="p-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-lg transition duration-200"
-          >
-            Search
-          </button>
-        </div>
-      </form>
+//       {/* Search Input */}
+//       <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto mb-12">
+//         <div className="flex bg-gray-800/70 rounded-lg shadow-lg border border-purple-700">
+//           <input
+//             type="text"
+//             value={searchQuery}
+//             onChange={handleSearchInputChange}
+//             placeholder="Search for Mars, Apollo, Hubble, nebula..."
+//             className="flex-grow p-4 bg-transparent text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-l-lg"
+//           />
+//           <button
+//             type="submit"
+//             className="p-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-lg transition duration-200"
+//           >
+//             Search
+//           </button>
+//         </div>
+//       </form>
 
-      {/* Display Area */}
-      {loading ? (
-        <div className="text-center text-gray-400 text-xl py-10">
-          <p>Searching media library...</p>
-        </div>
-      ) : error ? (
-        <div className="bg-red-700/80 p-4 rounded-lg text-white text-center max-w-3xl mx-auto shadow-lg border border-white">
-          <p className="font-semibold text-lg">Error fetching media:</p>
-          <p className="mt-2">{error}</p>
-          <p className="mt-4 text-sm">
-            Please try again later. The NASA Image and Video Library API might be temporarily unavailable.
-          </p>
-        </div>
-      ) : hasSearched && results.length === 0 ? (
-        <div className="text-center text-gray-400 text-xl py-10">
-          <p>No results found for &quot;{searchQuery}&quot;. Try a different keyword!</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {results.map((item) => {
-            const data = item.data[0];
-            const thumbnail = item.links?.find(link => link.rel === 'preview')?.href;
+//       {/* Display Area */}
+//       {loading ? (
+//         <div className="text-center text-gray-400 text-xl py-10">
+//           <p>Searching media library...</p>
+//         </div>
+//       ) : error ? (
+//         <div className="bg-red-700/80 p-4 rounded-lg text-white text-center max-w-3xl mx-auto shadow-lg border border-white">
+//           <p className="font-semibold text-lg">Error fetching media:</p>
+//           <p className="mt-2">{error}</p>
+//           <p className="mt-4 text-sm">
+//             Please try again later. The NASA Image and Video Library API might be temporarily unavailable.
+//           </p>
+//         </div>
+//       ) : hasSearched && results.length === 0 ? (
+//         <div className="text-center text-gray-400 text-xl py-10">
+//           <p>No results found for &quot;{searchQuery}&quot;. Try a different keyword!</p>
+//         </div>
+//       ) : (
+//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//           {results.map((item) => {
+//             const data = item.data[0];
+//             const thumbnail = item.links?.find(link => link.rel === 'preview')?.href;
 
-            if (!data) return null;
+//             if (!data) return null;
 
-            return (
-              <a
-                key={data.nasa_id}
-                href={`https://images.nasa.gov/details/${data.nasa_id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gray-800/70 rounded-lg shadow-lg hover:bg-gray-700/80 transition duration-300 border border-purple-700 flex flex-col overflow-hidden"
-              >
-                {thumbnail ? (
-                  <div className="relative w-full" style={{ paddingBottom: '75%' }}>
-                    <Image
-                      src={thumbnail}
-                      alt={data.title}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      className="rounded-t-lg"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full bg-gray-600 flex items-center justify-center text-gray-300 text-sm h-36">
-                    No Thumbnail
-                  </div>
-                )}
-                <div className="p-4 flex-grow">
-                  <h3 className="text-lg font-semibold text-purple-100 mb-2 line-clamp-2">{data.title}</h3>
-                  <p className="text-gray-300 text-xs">Type: {data.media_type.toUpperCase()}</p>
-                  <p className="text-gray-400 text-xs mt-1">
-                    {moment(data.date_created).format('YYYY-MM-DD')}
-                  </p>
-                </div>
-              </a>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
+//             return (
+//               <a
+//                 key={data.nasa_id}
+//                 href={`https://images.nasa.gov/details/${data.nasa_id}`}
+//                 target="_blank"
+//                 rel="noopener noreferrer"
+//                 className="bg-gray-800/70 rounded-lg shadow-lg hover:bg-gray-700/80 transition duration-300 border border-purple-700 flex flex-col overflow-hidden"
+//               >
+//                 {thumbnail ? (
+//                   <div className="relative w-full" style={{ paddingBottom: '75%' }}>
+//                     <Image
+//                       src={thumbnail}
+//                       alt={data.title}
+//                       fill
+//                       style={{ objectFit: 'cover' }}
+//                       className="rounded-t-lg"
+//                     />
+//                   </div>
+//                 ) : (
+//                   <div className="w-full bg-gray-600 flex items-center justify-center text-gray-300 text-sm h-36">
+//                     No Thumbnail
+//                   </div>
+//                 )}
+//                 <div className="p-4 flex-grow">
+//                   <h3 className="text-lg font-semibold text-purple-100 mb-2 line-clamp-2">{data.title}</h3>
+//                   <p className="text-gray-300 text-xs">Type: {data.media_type.toUpperCase()}</p>
+//                   <p className="text-gray-400 text-xs mt-1">
+//                     {moment(data.date_created).format('YYYY-MM-DD')}
+//                   </p>
+//                 </div>
+//               </a>
+//             );
+//           })}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+

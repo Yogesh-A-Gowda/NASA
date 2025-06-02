@@ -15,7 +15,7 @@ const Navbar = () => {
           <li><Link href="/launch-tracker" className="hover:text-gray-300 text-lg font-medium">Launches & ISS</Link></li>
           <li><Link href="/space-weather" className="hover:text-gray-300 text-lg font-medium">Space Weather</Link></li>
           <li><Link href="/earth-from-space" className="hover:text-gray-300 text-lg font-medium">Earth From Space</Link></li>
-          <li><Link href="/nasa-media" className="hover:text-gray-300 text-lg font-medium">NASA Media</Link></li>
+    {/*      <li><Link href="/nasa-media" className="hover:text-gray-300 text-lg font-medium">NASA Media</Link></li> */}
         </ul>
       </div>
     </nav>
