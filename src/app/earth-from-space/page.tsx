@@ -56,7 +56,10 @@ async function getIssLocation(): Promise<{ issData: IssData | null; error?: stri
     const issData: IssData = {
       message: data.message,
       timestamp: data.timestamp,
-      iss_position: data.iss_position,
+      iss_position: {
+        latitude: data.iss_position.latitude.toString(), // ✅ Convert to string
+        longitude: data.iss_position.longitude.toString(), // ✅ Convert to string
+      },
     };
 
     return { issData };
